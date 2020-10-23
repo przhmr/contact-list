@@ -4,21 +4,23 @@ const bcrypt = require("bcryptjs")
 const User = require("../models/userModel")
 const jwt = require("jsonwebtoken")
 const auth = require("../middleware/auth")
-const sgMail = require('@sendgrid/mail');
+
+const nodemailer = require("nodemailer");
 
 
 
 router.get("/email-activate", async (req, res) => {
+  console.log('gotten request');
+    console.log(req.query);
   
-   
-    const {token}= req.body;
-
+     const token= req.query.token;
+              
     if (token){
 
       jwt.verify(token, process.env.JWT_ACC_KEY, function(err,decodedToken){
 
         if(err){
-
+          console.log('link expired!');
           return res.status(400).json({error: "Incorrect or Expired Link"})
 
         }
@@ -35,6 +37,7 @@ router.get("/email-activate", async (req, res) => {
           
         });
         const savedUser =   newUser.save();
+        console.log('user should be saved');
         res.json(savedUser);
       
       })
@@ -42,13 +45,13 @@ router.get("/email-activate", async (req, res) => {
        
      
     
-    }
+    } 
 
-    else {
+   else {
 
-return res.json({error: "Something gone wrong"})
+    return res.json({error: "Something gone wrong"})
 
-    }
+    } 
 
 
   
@@ -59,7 +62,7 @@ return res.json({error: "Something gone wrong"})
 
 router.post("/register", async (req, res) => {
     try {
-      let { email, password, passwordCheck,firstName, lastName} = req.body;
+      let { email, password, passwordCheck,firstName, lastName} = req.body.user;
 
       console.log(req.body)
   
@@ -86,29 +89,36 @@ router.post("/register", async (req, res) => {
       const passwordHash = await bcrypt.hash(password, salt);
       
       const token = jwt.sign({email,passwordHash, firstName, lastName}, process.env.JWT_ACC_KEY, {expiresIn:'20m'})
+      var transport = nodemailer.createTransport({
+        host: "smtp.mailtrap.io",
+        port: 2525,
+        auth: {
+          user: "c4f41d0d1f624a",
+          pass: "8bc87dca8d22da"
+        }
+      });
+   
 
-
-      sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-      const msg = {
-        to: email,
-        from: 'thegoatlist@gmail.com',
-        subject: 'Acivate your account in this link',
-        html: 
-      
-        `<h2> Hi ${email} click on the button to verify your new account</h2>
+var mailOptions = {
+  from: '"Example Team" <thegoat@example.com>',
+  to: email,
+  subject: 'Activate your new account :)',
+  text: 'Hey there, it’s our first message sent with Nodemailer ',
+  html:  `<h2> Hi ${firstName} click on the button to verify your new account</h2>
         
         <p>${process.env.CLIENT_URL}/authentication/activate/?token=${token}</p>        
-        `
-        ,
-      };
+        `,
+  
+};
+
+transport.sendMail(mailOptions, (error, info) => {
+  if (error) {
+    return console.log(error);
+  }
+  console.log('Message sent: %s', info.messageId);
+});
       
-      sgMail.send(msg).then(() => {
-        console.log('Message sent')
-        return res.json({message: 'Email has been sent'})
-    }).catch((error) => {
-        console.log(error.response.body)
-        // console.log(error.response.body.errors[0].message)
-    })
+      
 
      
     } catch (err) {
@@ -118,7 +128,7 @@ router.post("/register", async (req, res) => {
   
   router.post("/login", async (req, res) => {
     try {
-      const { email, password } = req.body;
+      const { email, password } = req.body.user;
   
       // validate
       if (!email || !password)
@@ -150,6 +160,41 @@ router.post("/register", async (req, res) => {
       res.status(500).json({ error: err.message });
     }
   });
+
+  router.patch("/:id", auth, async (req, res) => {
+
+    try {
+
+        const user = await User.find(
+            {userId: req.user, _id: req.params_id}) 
+        if(!user)
+        res.status(400).json({msg: "Not found with this ID"})
+
+        const updatedUser = await User.findByIdAndUpdate({ _id: req.params.id },{
+
+            email: req.body.email,
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+                      
+        }
+         )
+
+        const savedUser = await updatedUser.save() 
+        res.json(savedUser)
+    }
+
+catch(err){
+
+    
+    res.status(500).json({error: err.message})
+
+}
+
+   
+  });
+
+
+
   
   router.delete("/delete", auth, async (req, res) => {
     try {
@@ -159,6 +204,9 @@ router.post("/register", async (req, res) => {
       res.status(500).json({ error: err.message });
     }
   });
+
+
+
   
   router.post("/tokenIsValid", async (req, res) => {
     try {
@@ -218,7 +266,7 @@ router.post('/passwordReset', async (req, res) => {
 
   
   router.get("/", auth, async (req, res) => {
-    const user = await User.findById(req.user);
+    const user = await User.find({UserId: req.user});
     res.json({
     id: user._id,
     });

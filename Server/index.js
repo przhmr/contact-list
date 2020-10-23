@@ -41,3 +41,4 @@ console.log("MongoDB connection established :)");
 
 // set up routers
 app.use("/users", require("./routes/userRouter")));
+app.use("/contacts", require("./routes/contactRouter"));
