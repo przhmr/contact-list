@@ -11,7 +11,6 @@ import Axios from 'axios';
   const {userData}= useContext(UserContext);
   const {token, user} = userData;
   let [contactsc, setContactsc] = useContext(ContactsContext);
-  /* const {  } = useContext(CartContext); */
   const [showModal, setShowModal] = React.useState(false);  
   
   let contactsm = contactsc || {};
@@ -29,7 +28,7 @@ try{
 
   
   
-  const res = await Axios.delete('http://localhost:5000/items/${id}',{contactsc}, {headers: {"x-auth-token": token, "Content-Type": "application/json"}} );
+  const res = await Axios.delete('http://localhost:5000/contacts/${id}',{contactsc}, {headers: {"x-auth-token": token, "Content-Type": "application/json"}} );
   console.log(res.data) 
 
 }
@@ -46,73 +45,75 @@ return(
 
     <>
     
-    <button onClick={() => setShowModal(true)} className=' '>
-       Editar
+    <button onClick={() => setShowModal(true)}>
+       Edit
        
       
   	</button>
     {showModal ? (<> 
     <div
-      className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
+      
       
     >
-      <div className="relative w-auto my-6 mx-auto max-w-3xl">
+      <div >
         {/*content*/}
-        <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
+        <div >
           {/*header*/}
-          <div className="flex items-start justify-between p-5 border-b border-solid border-gray-300 rounded-t">
-            <h3 className="text-xl font-semibold">
-              Editar Articulo
+          <div >
+            <h3 >
+              Edit Contact
             </h3>
             <button
-              className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
+              
               onClick={() => setShowModal(false)}
             >
-              <span className="bg-transparent text-black opacity-5 h-6 w-6 text-xl block outline-none focus:outline-none">
+              <span>
                 x
               </span>
             </button>
           </div>
           {/*body*/}
-          <div className="relative p-6 flex-auto">
+          <div >
             <p className="my-4 text-gray-600 text-lg leading-relaxed">
              
 
               
-        <label htmlFor="title">Title</label>
+        <label htmlFor="title">email</label>
         <input
-          id="title"
+          id="email"
           type="text"
-          value= {contactsm.title}
-          onChange={(e) => setContactsc({ ...contactsm, title: e.target.value })}
+          value= {contactsm.email}
+          onChange={(e) => setContactsc({ ...contactsm, email: e.target.value })}
         />
               
 
         
 
-        <label htmlFor="description">Description</label>
+        <label htmlFor="description">First Name</label>
         <input
-          id="description"
+          id="firstName"
           type="text"
-          value= {contactsm.description}
-          onChange={(e) => setContactsc({ ...contactsm, description: e.target.value })}
+          value= {contactsm.firstName}
+          onChange={(e) => setContactsc({ ...contactsm, firstName: e.target.value })}
         />
 
-<label htmlFor="price">Price</label>
+<label htmlFor="price">Last Name</label>
         <input
-          id="price"
-          value= {contactsm.price}
-          onChange={(e) => setContactsc({ ...contactsm, price: e.target.value })}
+          id="lastName"
+          value= {contactsm.lastName}
+          onChange={(e) => setContactsc({ ...contactsm, lastName: e.target.value })}
         />
         
-        {/* <span>Browse</span>
-        <input type='file'
-         name='image' 
-         onChange ={(e)=> setImage(e.target.files[0])} />
-         */}
+        <label htmlFor="contactNumber">Contact Number</label>
+        <input
+          id="contactNumber"
+          value= {contactsm.contactNumber}
+          onChange={(e) => setContactsc({ ...contactsm, contactNumber: e.target.value })}
+        />
+        
 
-        <button onClick={test} className='btn center'>Enviar</button>       
-        <button onClick={borrar} className= 'btn center'> Borrar </button>     
+        <button onClick={test} className='btn center'>Apply</button>       
+        <button onClick={borrar} className= 'btn center'> Clear </button>     
 
 
             </p>

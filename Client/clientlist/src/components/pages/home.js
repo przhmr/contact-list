@@ -80,12 +80,12 @@ const response = await getContacts()
 
 if(response){
 
-console.log(response)
-setContacts(response)  
+
 setContactsc(response)
 setItems(response)
-console.log(contacts)
-console.log(contactsc)
+
+
+
 }
 else{
 
@@ -98,7 +98,7 @@ else{
 
 loadContacts()
 
-console.log(contactsc);
+
   
 console.log(token);
  },[])
@@ -113,11 +113,9 @@ console.log(token);
   try {
     
         
-    const newContact = contacts;
+       
 
-    console.log(newContact);
-
-    await Axios.post('http://localhost:5000/contacts',{newContact}, {headers: {"x-auth-token": token, "Content-Type": "application/json"}} );
+    await Axios.post('http://localhost:5000/contacts',{contacts}, {headers: {"x-auth-token": token, "Content-Type": "application/json"}} );
     
     
 

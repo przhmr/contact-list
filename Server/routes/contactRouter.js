@@ -8,28 +8,37 @@ router.post("/", auth, async (req, res) => {
 
     try {
 
+     
         
-        let {email, firstName, lastName, contactNumber}= req.body;
+        let {email, firstName, lastName, contactNumber}= req.body.contacts;
         
-        
+       console.log(email)
+
         //validation
 
         if ( !email | !firstName | !lastName | !contactNumber )
         {
         console.log("Aqui esta el error")
-        console.log(req.body)
         
+        console.log(email)
+        console.log(firstName)
+        console.log(lastName)
+        console.log(contactNumber)
         
         return res.status(400).json({ msg: "Not all Contact Info entered" });
         }
 
+       
+        
+        const existingContact = await Contact.findOne({ email: email });
+      if (existingContact){
 
-        const existingContact = await User.findOne({ email: email });
-      if (existingContact)
         return res
           .status(400)
           .json({ msg: "A contact with this email already exists." });
 
+      }
+        
         const newContact = new Contact({
 
             
