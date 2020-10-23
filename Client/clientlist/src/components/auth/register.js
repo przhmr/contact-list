@@ -34,15 +34,7 @@ export default function Register() {
       const newUser = {user};
       console.log(newUser)
       await Axios.post("http://localhost:5000/users/register", newUser);
-      /* const loginRes = await Axios.post("http://localhost:5000/users/login", {
-        user
-      });
-      setUserData({
-        token: loginRes.data.token,
-        user: loginRes.data.user,
-      });
-      localStorage.setItem("auth-token", loginRes.data.token);
-      history.push("/") */
+      
     }
 
     catch(err){

@@ -157,7 +157,7 @@ catch(err){
         console.log ("test test test")
 
         const contact = await Contact.find(
-            {userId: req.user, _id: req.params_id}) 
+            {contactId: req.user, _id: req.params_id}) 
         if(!contact)
         res.status(400).json({msg: "Not found with this ID"})
 

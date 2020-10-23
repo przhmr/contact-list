@@ -18,7 +18,10 @@ import Axios from 'axios';
 
   const test=()=>{
 
-    console.log( contactsc[0])
+    console.log( contactsc)
+    console.log( token)
+    console.log(user.id)
+  
 
   }
 
@@ -26,9 +29,11 @@ import Axios from 'axios';
     
 try{
 
+  var url= new URL('http://localhost:5000/contacts/')
+
+  url.searchParams.append("id",user.id)
   
-  
-  const res = await Axios.delete('http://localhost:5000/contacts/${id}',{contactsc}, {headers: {"x-auth-token": token, "Content-Type": "application/json"}} );
+  const res = await Axios.delete(url,{contactsc}, {headers: {"x-auth-token": token, "Content-Type": "application/json"}} );
   console.log(res.data) 
 
 }
@@ -113,7 +118,7 @@ return(
         
 
         <button onClick={test} className='btn center'>Apply</button>       
-        <button onClick={borrar} className= 'btn center'> Clear </button>     
+        <button onClick={borrar} className= 'btn center'> Erase </button>     
 
 
             </p>
