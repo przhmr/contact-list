@@ -150,24 +150,28 @@ catch(err){
   
 
 
-  router.delete("/:id", auth, async (req, res) => {
+  router.delete("/:id", async (req, res) => {
 
     try {   
         
         console.log ("test test test")
 
         const contact = await Contact.find(
-            {contactId: req.user, _id: req.params_id}) 
+            {userId: req.user, _id: req.params_id}) 
         if(!contact)
         res.status(400).json({msg: "Not found with this ID"})
 
         const deletedContact= await Contact.findByIdAndDelete(req.params.id)
         res.json(deletedContact)
+
+        console.log("paso completado")
+
     }
 
 catch(err){
 
     res.status(500).json({error: err.message})
+    console.log("Hay un error")
 
 }
 

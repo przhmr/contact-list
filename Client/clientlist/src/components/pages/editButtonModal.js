@@ -29,12 +29,11 @@ import Axios from 'axios';
     
 try{
 
-  var url= new URL('http://localhost:5000/contacts/')
+  var url= new URL('http://localhost:5000/contacts/'+ user.id)
 
-  url.searchParams.append("id",user.id)
   
-  const res = await Axios.delete(url,{contactsc}, {headers: {"x-auth-token": token, "Content-Type": "application/json"}} );
-  console.log(res.data) 
+  await Axios.delete(url,{contactsc}, {headers: {"x-auth-token": token, "Content-Type": "application/json"}} );
+  
 
 }
 
